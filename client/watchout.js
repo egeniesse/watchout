@@ -116,17 +116,23 @@ var moveAsteroids = function() {
 
 setInterval(moveAsteroids,1200)
 
-setInterval(function(){
+var funk = function(){
   //locate player
   var playerLocationX = parseInt(svg.select('.player1').attr('cx'))
-  var playerLocationY = parseInt(svg.select('.player1').attr('cy'))                                            
-                      svg.selectAll('.asteroids')
-                      .each("end", function(d) {
-                        //if (Math.sqrt(Math.pow(parseInt(d.left - playerLocationX, 2)) + Math.pow(parseInt(d.top - playerLocationY, 2)))){
+  var playerLocationY = parseInt(svg.select('.player1').attr('cy'))  
+                                            
+                      svg.selectAll('.asteroids').attr('fill' , function(d){return d.color}).each(function(d) {
+                        //console.log('!!!')
+                        //console.log(d.left)
+                        if (Math.sqrt(Math.pow(parseInt(d.left) - playerLocationX, 2) + Math.pow(parseInt(d.top) - playerLocationY, 2)) < 50){
                           console.log("hi")
-                        })
+                        }
+                      })
                         //check the total distance
-}, 10)
+}
+//funk();
+
+setInterval(funk, 10)
 
 //Collision Logic
 
