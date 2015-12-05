@@ -4,28 +4,34 @@ var width = window.innerWidth - 200;
 var height = window.innerHeight - 200;
 
 var Circle = function(){
-  this.left = window.innerWidth * Math.random();
-  this.top = window.innerHeight * Math.random();
+  this.newLeft = window.innerWidth * Math.random();
+  this.newTop = window.innerHeight * Math.random();
+  this.left = 0;
+  this.top = 0;
+  this.curPosLeft;
+  this.curPosTop;
   this.color = 'black';
 }
 
 Circle.prototype.findStartPoint = function(curWall){
   var possibleWalls = Math.floor(Math.random()*4)
+  this.left = this.newLeft;
+  this.top = this.newTop;
   if (possibleWalls === 0 && possibleWalls !== curWall) {
-    this.left = 100 
-    this.top = Math.random()*height
+    this.newLeft = 100 
+    this.newTop = Math.random()*height
 
   } else if (possibleWalls === 1 && possibleWalls !== curWall) {
-    this.left = width - 100;
-    this.top = Math.random()*height
+    this.newLeft = width - 100;
+    this.newTop = Math.random()*height
 
   } else if (possibleWalls === 2 && possibleWalls !== curWall) {
-    this.left = Math.random()*width 
-    this.top = height - 100;
+    this.newLeft = Math.random()*width 
+    this.newTop = height - 100;
 
   } else if (possibleWalls !== curWall){
-    this.left = Math.random()*width 
-    this.top = 100
+    this.newLeft = Math.random()*width 
+    this.newTop = 100
   }
 }
 
@@ -49,6 +55,7 @@ for (var i = 0; i < 5; i++){
   asteroids.push(new Circle());
 }
 var player1 = [new Circle]
+player1.timeVariable = 10
 
 var colors = ['orange', 'teal', 'purple', 'red', 'green']
 
@@ -100,9 +107,9 @@ var moveAsteroids = function() {
 
   svg.selectAll('.asteroids')
     .transition()
-    .duration(900)
-      .attr("cx", function(d) {return d.left})
-      .attr("cy", function(d) {return d.top})
+    .duration(1000)
+      // .attr("cx", function(d) {return d.newLeft})
+      // .attr("cy", function(d) {return d.newTop})
       .attr('fill', function(d){ return d.color})
       .each("end", function(d) {
         d.findStartPoint();
@@ -110,54 +117,50 @@ var moveAsteroids = function() {
           d.color = colors[colorIndex]
         }
     })
+      .tween('custom', updateEnemy)
   iterations++
 
   }
 
-setInterval(moveAsteroids,1200)
+setInterval(moveAsteroids,1300)
 
-var funk = function(){
+
+var updateEnemy = function() {
+  var ass = d3.select(this);
+  var newTop, newLeft, top, left;
+  var assLocate = ass.attr('location', function(d) {
+    newTop = parseInt(d.newTop);
+    newLeft = parseInt(d.newLeft); 
+    top = parseInt(d.top);
+    left = parseInt(d.left);
+    })
+
+  return function(t) {
+    ass.attr("newPositionX", function(d){ d.curPosLeft = (left) + (newLeft - left)*t;
+                                         d.curPosTop = top + (newTop - top)*t;
+    ass.attr('cx', d.curPosLeft)
+       .attr('cy', d.curPosTop);
+    })
+  }
+}
+
+var bringDaFunk = function(){
   //locate player
   var playerLocationX = parseInt(svg.select('.player1').attr('cx'))
-  var playerLocationY = parseInt(svg.select('.player1').attr('cy'))  
+  var playerLocationY = parseInt(svg.select('.player1').attr('cy'))
+  player1.timeVariable = 10;  
                                             
-                      svg.selectAll('.asteroids').attr('fill' , function(d){return d.color}).each(function(d) {
-                        //console.log('!!!')
-                        //console.log(d.left)
-                        if (Math.sqrt(Math.pow(parseInt(d.left) - playerLocationX, 2) + Math.pow(parseInt(d.top) - playerLocationY, 2)) < 50){
+                      svg.selectAll('.asteroids').attr('tween', function(d){return d.color}).each(function(d) {
+                        if (Math.sqrt(Math.pow(parseInt(d.curPosLeft) - playerLocationX, 2) + Math.pow(parseInt(d.curPosTop) - playerLocationY, 2)) < 50){
                           console.log("hi")
+                          player1.timeVariable = 1000;
                         }
                       })
                         //check the total distance
 }
 //funk();
 
-setInterval(funk, 10)
-
-//Collision Logic
-
-  //constantly running in background
-
-  //Check that distance between asteroid and center of circle not less than 50;
-
-  //if less than 50, ++
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+setInterval(bringDaFunk, player1.timeVariable)
 
 
 //Enter/Exit/Update
