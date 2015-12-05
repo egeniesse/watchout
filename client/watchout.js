@@ -116,13 +116,26 @@ var moveAsteroids = function() {
 
 setInterval(moveAsteroids,1200)
 
+setInterval(function(){
+  //locate player
+  var playerLocationX = parseInt(svg.select('.player1').attr('cx'))
+  var playerLocationY = parseInt(svg.select('.player1').attr('cy'))                                            
+                      svg.selectAll('.asteroids')
+                      .each("end", function(d) {
+                        //if (Math.sqrt(Math.pow(parseInt(d.left - playerLocationX, 2)) + Math.pow(parseInt(d.top - playerLocationY, 2)))){
+                          console.log("hi")
+                        })
+                        //check the total distance
+}, 10)
 
+//Collision Logic
 
+  //constantly running in background
 
+  //Check that distance between asteroid and center of circle not less than 50;
 
-// setInterval(1800, function(){
-//   change();
-// });
+  //if less than 50, ++
+
 
 
 
