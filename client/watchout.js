@@ -54,8 +54,6 @@ var asteroids = [];
 for (var i = 0; i < 5; i++){
   asteroids.push(new Circle());
 }
-var player1 = [new Circle]
-player1.timeVariable = 10
 
 var colors = ['orange', 'teal', 'purple', 'red', 'green']
 
@@ -92,6 +90,14 @@ svg.on('mousemove', function() {
            .attr('cy', coordinates[1])
     })
 
+var playerStats = new Circle()
+
+playerStats.currentScore = 0;
+playerStats.collisions = 3;
+playerStats.highScore = 0;
+
+
+
 var colorChange = function(){
   return Math.floor(Math.random()*colors.length);
 }
@@ -99,6 +105,20 @@ var colorChange = function(){
 //Move objects around. Call again
 var iterations = 0;
 var moveAsteroids = function() {
+  playerStats.currentScore += 1;
+  if(playerStats.highScore < playerStats.currentScore){
+    playerStats.highScore = playerStats.currentScore;
+  }
+  d3.select('.currentScore')
+    .data([playerStats])
+    .text(function(d) {return d.currentScore})
+  d3.select('.highScore')
+    .data([playerStats])
+    .text(function(d) {return d.highScore})
+  d3.select('.collision')
+    .data([playerStats])
+    .text(function(d){return d.collisions})
+
   if(iterations % 5 === 0){   
     asteroids.push(new Circle())
     appendAsteroids();
@@ -148,19 +168,29 @@ var bringDaFunk = function(){
   //locate player
   var playerLocationX = parseInt(svg.select('.player1').attr('cx'))
   var playerLocationY = parseInt(svg.select('.player1').attr('cy'))
-  player1.timeVariable = 10;  
+  
                                             
                       svg.selectAll('.asteroids').attr('tween', function(d){return d.color}).each(function(d) {
                         if (Math.sqrt(Math.pow(parseInt(d.curPosLeft) - playerLocationX, 2) + Math.pow(parseInt(d.curPosTop) - playerLocationY, 2)) < 50){
-                          console.log("hi")
-                          player1.timeVariable = 1000;
+                          playerStats.collisions--;
+                          clearInterval(collisionIndicator)
+                          
+                          
+                          if (playerStats.collisions === 0) {
+                            playerStats.currentScore = 0;
+                            playerStats.collisions = 3;
+                          }
+                          setTimeout(1000, function() {})
+                          collisionIndicator = setInterval(bringDaFunk, 10)
                         }
                       })
                         //check the total distance
 }
 //funk();
 
-setInterval(bringDaFunk, player1.timeVariable)
+var collisionIndicator = setInterval(bringDaFunk, 10)
+bringDaFunk();
+
 
 
 //Enter/Exit/Update
