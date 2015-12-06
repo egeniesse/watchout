@@ -4,9 +4,8 @@
 Feel free to use it if you like. */
 
 .container {
-  background-color: green;
 }
-div .bar {
+.bar {
   float: left;
-  background-color: red;
+  
 }
