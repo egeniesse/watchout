@@ -1,11 +1,11 @@
 // start slingin' some d3 here.
 
-var width = window.innerWidth - 200;
+var width = window.innerWidth/2 - 200;
 var height = window.innerHeight - 200;
 
 var Circle = function(){
-  this.newLeft = window.innerWidth * Math.random();
-  this.newTop = window.innerHeight * Math.random();
+  this.newLeft = width * Math.random();
+  this.newTop = height * Math.random();
   this.left = 0;
   this.top = 0;
   this.curPosLeft;
@@ -45,6 +45,7 @@ d3.select("body")
 
 var svg  = d3.select('body')
               .append('svg')
+              .attr('class','container')
               .attr('width', width)
               .attr('height', height)
 
